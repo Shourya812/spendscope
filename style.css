@@ -1,0 +1,625 @@
+/* ========== 1. VARIABLES, RESET, BASE ========== */
+
+:root {
+  --bg: #030407;
+  --surface: #0a0d15;
+  --surface-2: #10141f;
+  --border: #1b2130;
+
+  --cobalt: #1558C9;
+  --cobalt-light: #4f8ef7;
+  --lime: #D4FF24;
+
+  --text: #eef1f7;
+  --text-muted: #8a93a8;
+  --danger: #ff6b6b;
+
+  --radius: 14px;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+.app-header {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 8px;
+}
+
+.app-header h1 {
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  color: var(--lime);
+}
+
+.app-header p {
+  color: var(--text-muted);
+}
+
+.app-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Big sections look like panels */
+.add-transaction,
+.history,
+.analytics {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+}
+
+h2 {
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+}
+
+/* ========== 2. CARDS ========== */
+
+.summary-cards,
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--cobalt);
+}
+
+.card h3 {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+#card-income p {
+  color: var(--lime);
+}
+
+#card-balance p {
+  color: var(--cobalt-light);
+}
+
+/* Cards inside the analytics panel need a different shade to stand out */
+.analytics .card {
+  background: var(--surface-2);
+}
+
+/* ========== 3. FORM ========== */
+
+#transaction-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* The 6th group is the description box: let it span both columns */
+.form-group:nth-child(6) {
+  grid-column: 1 / -1;
+}
+
+label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #566079;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--cobalt);
+  box-shadow: 0 0 0 3px rgba(21, 88, 201, 0.35);
+}
+
+textarea {
+  resize: vertical;
+}
+
+.error-message {
+  color: var(--danger);
+  font-size: 0.78rem;
+  min-height: 1em;
+}
+
+#add-btn {
+  grid-column: 1 / -1;
+  background: var(--lime);
+  color: var(--bg);
+  font: inherit;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+#add-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+/* ========== 4. HISTORY: CONTROLS + TABLE ========== */
+
+.history-controls {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+th {
+  text-align: left;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+tbody tr {
+  transition: background 0.15s ease;
+}
+
+tbody tr:hover {
+  background: var(--surface-2);
+}
+
+#empty-message {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 32px 0;
+}
+
+/* Prepared now, used by JavaScript in Stage 3 */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-income {
+  background: rgba(212, 255, 36, 0.14);
+  color: var(--lime);
+}
+
+.badge-expense {
+  background: rgba(79, 142, 247, 0.16);
+  color: var(--cobalt-light);
+}
+
+.amount-income {
+  color: var(--lime);
+  font-weight: 600;
+}
+
+.amount-expense {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.delete-btn {
+  font: inherit;
+  font-size: 0.8rem;
+  color: var(--danger);
+  background: transparent;
+  border: 1px solid rgba(255, 107, 107, 0.4);
+  border-radius: 8px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.delete-btn:hover {
+  background: rgba(255, 107, 107, 0.12);
+}
+
+.edit-btn {
+  font: inherit;
+  font-size: 0.8rem;
+  color: #60a5fa;
+  background: transparent;
+  border: 1px solid rgba(96, 165, 250, 0.4);
+  border-radius: 8px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.edit-btn:hover {
+  background: rgba(96, 165, 250, 0.12);
+}
+
+/* ========== 5. ANALYTICS, FOOTER, RESPONSIVE ========== */
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.chart-box {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.chart-box h3 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.chart-box canvas {
+  max-width: 100%;
+}
+
+.app-footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  padding: 24px;
+  border-top: 1px solid var(--border);
+}
+
+/* ----- Tablet ----- */
+@media (max-width: 900px) {
+  .history-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #search-input {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ----- Mobile ----- */
+@media (max-width: 600px) {
+  .app-header,
+  .app-main {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .add-transaction,
+  .history,
+  .analytics {
+    padding: 16px;
+  }
+
+  #transaction-form,
+  .history-controls {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ========== 6. VISUAL POLISH ========== */
+/* Everything below overrides or extends the sections above.
+   Later rules win when specificity is equal. */
+
+:root {
+  --glow-lime: 0 0 24px rgba(212, 255, 36, 0.25);
+  --glow-cobalt: 0 0 24px rgba(21, 88, 201, 0.45);
+}
+
+::selection {
+  background: var(--lime);
+  color: var(--bg);
+}
+
+/* Slow-moving light behind the whole page */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(21, 88, 201, 0.28), transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(212, 255, 36, 0.07), transparent 40%);
+  animation: drift 20s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(4%, 3%) scale(1.08); }
+}
+
+.app-header h1 {
+  text-shadow: 0 0 28px rgba(212, 255, 36, 0.35);
+}
+
+/* Frosted-glass panels: the background glow shows through softly */
+.add-transaction,
+.history,
+.analytics {
+  background: rgba(10, 13, 21, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* ----- Cards ----- */
+.card {
+  background: rgba(10, 13, 21, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow), var(--glow-cobalt);
+}
+
+#card-income {
+  border-color: rgba(212, 255, 36, 0.25);
+  box-shadow: 0 0 24px rgba(212, 255, 36, 0.07);
+}
+
+#card-income:hover {
+  border-color: var(--lime);
+  box-shadow: var(--shadow), var(--glow-lime);
+}
+
+#card-income p {
+  text-shadow: 0 0 20px rgba(212, 255, 36, 0.45);
+}
+
+#card-balance p {
+  text-shadow: 0 0 20px rgba(79, 142, 247, 0.5);
+}
+
+/* ----- Inputs ----- */
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: #2a3550;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  box-shadow: 0 0 0 3px rgba(21, 88, 201, 0.3), 0 0 20px rgba(21, 88, 201, 0.45);
+}
+
+/* ----- Add button: glow + shimmer sweep ----- */
+#add-btn {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 22px rgba(212, 255, 36, 0.22);
+  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.25s ease;
+}
+
+#add-btn:hover {
+  box-shadow: 0 8px 32px rgba(212, 255, 36, 0.45);
+}
+
+#add-btn:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+#add-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+
+#add-btn:hover::after {
+  left: 130%;
+}
+
+/* ----- Badges and delete button ----- */
+.badge-income {
+  box-shadow: 0 0 10px rgba(212, 255, 36, 0.25);
+}
+
+.badge-expense {
+  box-shadow: 0 0 10px rgba(79, 142, 247, 0.25);
+}
+
+.delete-btn {
+  transition: background 0.15s ease, box-shadow 0.2s ease;
+}
+
+.delete-btn:hover {
+  box-shadow: 0 0 12px rgba(255, 107, 107, 0.35);
+}
+
+/* ----- Entrance animations ----- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+.app-header {
+  animation: rise 0.6s ease backwards;
+}
+
+.summary-cards .card:nth-child(1) { animation: rise 0.6s ease 0.10s backwards; }
+.summary-cards .card:nth-child(2) { animation: rise 0.6s ease 0.20s backwards; }
+.summary-cards .card:nth-child(3) { animation: rise 0.6s ease 0.30s backwards; }
+.summary-cards .card:nth-child(4) { animation: rise 0.6s ease 0.40s backwards; }
+
+.add-transaction { animation: rise 0.6s ease 0.35s backwards; }
+.history         { animation: rise 0.6s ease 0.50s backwards; }
+.analytics       { animation: rise 0.6s ease 0.65s backwards; }
+
+/* ----- Newest transaction row slides in with a lime flash ----- */
+@keyframes rowIn {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+    background: rgba(212, 255, 36, 0.14);
+  }
+}
+
+tbody tr:first-child {
+  animation: rowIn 0.45s ease backwards;
+}
+
+/* ----- Respect people who turn motion off in their system settings ----- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.chart-box {
+    position: relative;
+    min-height: 320px;
+}
+
+.chart-box canvas {
+    max-height: 280px;
+}
+
+.cancel-edit-btn {
+    font: inherit;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    background: transparent;
+    border: 1px solid rgba(203, 213, 225, 0.3);
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.cancel-edit-btn:hover {
+    background: rgba(203, 213, 225, 0.1);
+    border-color: rgba(203, 213, 225, 0.6);
+}
+
+/* Floating SpendScope Cat */
+
+.cat-mascot {
+    position: fixed;
+    right: 25px;
+    bottom: 15px;
+    width: 180px;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.cat-mascot video {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+.app-footer a {
+    color: #60a5fa;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.2s ease;
+}
+
+.app-footer a i {
+    font-size: 1.1rem;
+}
+
+.app-footer a:hover {
+    color: #fbbf24;
+}
